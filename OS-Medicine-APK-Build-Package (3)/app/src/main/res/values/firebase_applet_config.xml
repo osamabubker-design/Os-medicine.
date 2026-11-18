@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="firestore_database_id" translatable="false">ai-studio-android-osmedici-5089c39f-6c8b-47c5-a948-77e908c0da5f</string>
+    <string name="recaptcha_site_key" translatable="false">6LcZGSIuAAAAAK-S0KmbtGfSlFNVEjt9TMWOqdu1</string>
+</resources>

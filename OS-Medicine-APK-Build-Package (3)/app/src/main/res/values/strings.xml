@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">OS Medicine</string>
+    <string name="error_network_unavailable">Network unavailable. Please check your connection and try again.</string>
+    <string name="error_auth_required">Please sign in with Google to continue.</string>
+    <string name="telebirr_official_number">+251925694548</string>
+    <string name="telebirr_local_number">0925694548</string>
+</resources>

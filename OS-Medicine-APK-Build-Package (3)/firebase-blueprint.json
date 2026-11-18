@@ -1,0 +1,290 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered OS Medicine user profile (patient, pharmacy owner, or administrator)",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID" },
+        "fullName": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["patient", "pharmacy", "admin"] },
+        "address": { "type": "string" },
+        "fcmToken": { "type": "string" },
+        "accountStatus": { "type": "string", "enum": ["active", "suspended"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "fullName", "phoneNumber", "email", "role", "accountStatus", "createdAt", "updatedAt"]
+    },
+    "Pharmacy": {
+      "title": "Pharmacy",
+      "description": "Registered Ethiopian pharmacy partner with GPS location and verification status",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string", "description": "Authenticated Firebase UID of the pharmacy owner" },
+        "pharmacyName": { "type": "string" },
+        "pharmacistName": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "email": { "type": "string" },
+        "address": { "type": "string" },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "businessLicenseNumber": { "type": "string" },
+        "licenseVerificationStatus": { "type": "string", "enum": ["PENDING", "VERIFIED", "REJECTED"] },
+        "approvalStatus": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED", "SUSPENDED"] },
+        "availability": { "type": "boolean" },
+        "averageRating": { "type": "number" },
+        "totalRatings": { "type": "integer" },
+        "profileImageUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerId", "pharmacyName", "pharmacistName", "phoneNumber", "email", "address", "latitude", "longitude", "businessLicenseNumber", "licenseVerificationStatus", "approvalStatus", "availability", "averageRating", "totalRatings", "createdAt", "updatedAt"]
+    },
+    "Medicine": {
+      "title": "Medicine",
+      "description": "Medicine inventory item belonging to an approved pharmacy",
+      "type": "object",
+      "properties": {
+        "medicineName": { "type": "string" },
+        "brand": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "dosage": { "type": "string" },
+        "pharmacyId": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "pharmacyName": { "type": "string" },
+        "quantityAvailable": { "type": "integer" },
+        "stockStatus": { "type": "string", "enum": ["IN_STOCK", "LOW_STOCK", "OUT_OF_STOCK"] },
+        "price": { "type": "number" },
+        "imageUrl": { "type": "string" },
+        "pharmacyApproved": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["medicineName", "brand", "category", "dosage", "pharmacyId", "ownerId", "quantityAvailable", "stockStatus", "price", "pharmacyApproved", "updatedAt"]
+    },
+    "PrescriptionRequest": {
+      "title": "PrescriptionRequest",
+      "description": "Patient prescription broadcast request to nearby pharmacies within 5km",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "patientName": { "type": "string" },
+        "patientPhone": { "type": "string" },
+        "prescriptionImageUrl": { "type": "string" },
+        "medicineName": { "type": "string" },
+        "deliveryMode": { "type": "string", "enum": ["pickup", "delivery"] },
+        "deliveryAddress": { "type": "string" },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "requestStatus": { "type": "string", "enum": ["PENDING", "RESPONDED", "UNLOCKED", "COMPLETED", "CANCELLED"] },
+        "paymentUnlocked": { "type": "boolean" },
+        "paymentId": { "type": "string" },
+        "eligibleOwnerIds": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["patientId", "patientName", "patientPhone", "prescriptionImageUrl", "deliveryMode", "latitude", "longitude", "requestStatus", "paymentUnlocked", "eligibleOwnerIds", "createdAt"]
+    },
+    "PharmacyResponse": {
+      "title": "PharmacyResponse",
+      "description": "Pharmacy stock availability and pricing response to a patient prescription request",
+      "type": "object",
+      "properties": {
+        "requestId": { "type": "string" },
+        "patientId": { "type": "string" },
+        "pharmacyId": { "type": "string" },
+        "pharmacyOwnerId": { "type": "string" },
+        "pharmacyName": { "type": "string" },
+        "pharmacyAddress": { "type": "string" },
+        "pharmacyPhone": { "type": "string" },
+        "pharmacyLat": { "type": "number" },
+        "pharmacyLng": { "type": "number" },
+        "medicineAvailability": { "type": "boolean" },
+        "medicineName": { "type": "string" },
+        "medicinePrice": { "type": "number" },
+        "quantityAvailable": { "type": "integer" },
+        "responseMessage": { "type": "string" },
+        "estimatedDeliveryTime": { "type": "string" },
+        "deliveryFee": { "type": "number" },
+        "deliveryStatus": { "type": "string", "enum": ["PENDING", "OUT_FOR_DELIVERY", "DELIVERED"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["requestId", "patientId", "pharmacyId", "pharmacyOwnerId", "pharmacyName", "medicineAvailability", "medicinePrice", "quantityAvailable", "deliveryFee", "deliveryStatus", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Patient order placed with an approved pharmacy",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "pharmacyId": { "type": "string" },
+        "pharmacyOwnerId": { "type": "string" },
+        "requestId": { "type": "string" },
+        "medicineItems": { "type": "array" },
+        "totalAmount": { "type": "number" },
+        "deliveryFee": { "type": "number" },
+        "paymentStatus": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED"] },
+        "deliveryMode": { "type": "string", "enum": ["pickup", "delivery"] },
+        "deliveryAddress": { "type": "string" },
+        "deliveryStatus": { "type": "string", "enum": ["PENDING", "PREPARING", "OUT_FOR_DELIVERY", "DELIVERED"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["patientId", "pharmacyId", "pharmacyOwnerId", "medicineItems", "totalAmount", "deliveryFee", "paymentStatus", "deliveryMode", "deliveryStatus", "createdAt"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "50 ETB unlock/broadcast payment submission with screenshot proof awaiting admin verification",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "orderId": { "type": "string" },
+        "requestId": { "type": "string" },
+        "paymentProvider": { "type": "string", "enum": ["telebirr", "cbe_birr", "chapa"] },
+        "paymentAmount": { "type": "number" },
+        "recipientNumber": { "type": "string" },
+        "paymentPhone": { "type": "string" },
+        "paymentReference": { "type": "string" },
+        "paymentScreenshotUrl": { "type": "string" },
+        "verificationStatus": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED"] },
+        "adminId": { "type": "string" },
+        "rejectionReason": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "verifiedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "requestId", "paymentProvider", "paymentAmount", "recipientNumber", "paymentPhone", "paymentReference", "paymentScreenshotUrl", "verificationStatus", "createdAt"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "Conversation thread between a patient and a pharmacy regarding a prescription request",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "pharmacyId": { "type": "string" },
+        "pharmacyOwnerId": { "type": "string" },
+        "requestId": { "type": "string" },
+        "pharmacyName": { "type": "string" },
+        "patientName": { "type": "string" },
+        "lastMessage": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["patientId", "pharmacyId", "pharmacyOwnerId", "requestId", "lastMessage", "updatedAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Individual chat message within a patient-pharmacy conversation",
+      "type": "object",
+      "properties": {
+        "chatId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderRole": { "type": "string", "enum": ["patient", "pharmacy"] },
+        "patientId": { "type": "string" },
+        "pharmacyOwnerId": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "readStatus": { "type": "boolean" }
+      },
+      "required": ["chatId", "senderId", "senderRole", "patientId", "pharmacyOwnerId", "message", "timestamp", "readStatus"]
+    },
+    "Rating": {
+      "title": "Rating",
+      "description": "Patient star rating and review for a pharmacy",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "pharmacyId": { "type": "string" },
+        "pharmacyOwnerId": { "type": "string" },
+        "requestId": { "type": "string" },
+        "rating": { "type": "integer" },
+        "comment": { "type": "string" },
+        "isPublic": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["patientId", "pharmacyId", "pharmacyOwnerId", "rating", "isPublic", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Real-time in-app notification for patients, pharmacies, and admins",
+      "type": "object",
+      "properties": {
+        "recipientId": { "type": "string" },
+        "recipientRole": { "type": "string", "enum": ["patient", "pharmacy", "admin"] },
+        "senderId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "notificationType": { "type": "string" },
+        "relatedOrderId": { "type": "string" },
+        "relatedRequestId": { "type": "string" },
+        "relatedPaymentId": { "type": "string" },
+        "isRead": { "type": "boolean" },
+        "actionType": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["recipientId", "recipientRole", "senderId", "title", "message", "notificationType", "isRead", "actionType", "createdAt"]
+    },
+    "AdminLog": {
+      "title": "AdminLog",
+      "description": "Immutable audit log of administrator actions",
+      "type": "object",
+      "properties": {
+        "adminId": { "type": "string" },
+        "action": { "type": "string" },
+        "targetId": { "type": "string" },
+        "description": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["adminId", "action", "targetId", "description", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles keyed by Firebase Auth UID"
+    },
+    "/pharmacies/{pharmacyId}": {
+      "schema": { "$ref": "#/entities/Pharmacy" },
+      "description": "Registered pharmacies with approval status and coordinates"
+    },
+    "/medicines/{medicineId}": {
+      "schema": { "$ref": "#/entities/Medicine" },
+      "description": "Pharmacy medicine inventory items"
+    },
+    "/prescriptionRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/PrescriptionRequest" },
+      "description": "Patient prescription broadcast requests"
+    },
+    "/pharmacyResponses/{responseId}": {
+      "schema": { "$ref": "#/entities/PharmacyResponse" },
+      "description": "Pharmacy responses to prescription requests"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Patient medicine orders"
+    },
+    "/payments/{paymentId}": {
+      "schema": { "$ref": "#/entities/Payment" },
+      "description": "Telebirr, CBE Birr, and Chapa payment submissions"
+    },
+    "/chats/{chatId}": {
+      "schema": { "$ref": "#/entities/Chat" },
+      "description": "Patient-pharmacy chat threads"
+    },
+    "/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/Message" },
+      "description": "Messages belonging to chat threads"
+    },
+    "/ratings/{ratingId}": {
+      "schema": { "$ref": "#/entities/Rating" },
+      "description": "Patient ratings for pharmacies"
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "In-app notifications for all roles"
+    },
+    "/adminLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AdminLog" },
+      "description": "Administrator audit log entries"
+    }
+  }
+}

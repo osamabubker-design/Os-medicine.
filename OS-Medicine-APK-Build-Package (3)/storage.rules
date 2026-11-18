@@ -1,0 +1,42 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email_verified == true && request.auth.token.email == 'osamsuse21@gmail.com';
+    }
+
+    function isValidImageUpload() {
+      return request.resource != null &&
+             request.resource.size <= 5 * 1024 * 1024 &&
+             request.resource.contentType.matches('image/(jpeg|jpg|png|webp)');
+    }
+
+    // Prescriptions uploaded by patient: readable by patient, authenticated pharmacies handling requests, and admin
+    match /prescriptions/{patientId}/{fileName} {
+      allow read: if isSignedIn() && (request.auth.uid == patientId || isAdmin());
+      allow write: if isSignedIn() && request.auth.uid == patientId && isValidImageUpload();
+    }
+
+    // Payment proof screenshots uploaded by patient: readable ONLY by the uploader and admin
+    match /payments/{patientId}/{fileName} {
+      allow read: if isSignedIn() && (request.auth.uid == patientId || isAdmin());
+      allow write: if isSignedIn() && request.auth.uid == patientId && isValidImageUpload();
+    }
+
+    // Pharmacy profile images: readable by signed-in users, writable only by the owner
+    match /pharmacies/{ownerId}/{fileName} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.auth.uid == ownerId && isValidImageUpload();
+    }
+
+    // Medicine product images: readable by signed-in users, writable only by the pharmacy owner
+    match /medicines/{ownerId}/{fileName} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.auth.uid == ownerId && isValidImageUpload();
+    }
+  }
+}

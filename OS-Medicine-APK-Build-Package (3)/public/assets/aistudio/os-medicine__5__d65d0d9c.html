@@ -1,0 +1,1296 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OS MEDICINE — Find Your Medicine Anywhere in Ethiopia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Ethiopic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAF7; --ink:#1B2420; --primary:#0F5C4C; --primary-dark:#0A3F34;
+    --accent:#C9963B; --coral:#FF5A36; --coral-dark:#E5461F; --danger:#B5423B; --success:#2F8F5B; --card:#FFFFFF;
+    --border:#E4E1D6; --muted:#6B7268; --radius:14px;
+  }
+  [data-theme="dark"]{ --bg:#0F1C18; --ink:#EDEBE2; --card:#16302A; --border:#254038; --muted:#9CA69E; }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;transition:background .3s,color .3s;}
+  [lang-am]{font-family:'Noto Sans Ethiopic','Inter',sans-serif;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px;}
+  header{border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;}
+  .headbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;max-width:1000px;margin:0 auto;flex-wrap:wrap;gap:10px;}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;font-family:'Fraunces',serif;cursor:pointer;}
+  .logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;}
+  .roleNav{display:flex;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px;}
+  .roleBtn{border:none;background:none;padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);font-family:'Inter',sans-serif;}
+  .roleBtn.active{background:var(--primary);color:#fff;}
+  .headctrls{display:flex;gap:8px;align-items:center;}
+  button.ghost{background:none;border:1px solid var(--border);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;}
+  button.ghost:hover{border-color:var(--primary);}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;}
+  label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--muted);}
+  input,select{width:100%;padding:11px 12px;border-radius:9px;border:1px solid var(--border);background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;}
+  input:focus,button:focus{outline:2px solid var(--primary);outline-offset:1px;}
+  .field{margin-bottom:14px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+  .btn-primary{background:var(--primary);color:#fff;border:none;border-radius:999px;padding:13px 26px;font-weight:600;font-size:15px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;}
+  .btn-primary:hover{background:var(--primary-dark);}
+  .btn-small{border:none;border-radius:999px;padding:8px 15px;font-weight:600;font-size:12px;cursor:pointer;margin-right:6px;}
+  .btn-success{background:var(--success);color:#fff;}
+  .btn-danger{background:var(--danger);color:#fff;}
+  .btn-unban{background:var(--border);color:var(--ink);}
+  .eyebrow{color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
+  .tabs{display:flex;gap:0;margin:10px 0 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+  .tab{padding:10px 4px;margin-right:22px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border-bottom:2px solid transparent;}
+  .tab.active{color:var(--primary);border-color:var(--primary);}
+  .badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;display:inline-block;}
+  .badge.avail{background:rgba(47,143,91,.14);color:var(--success);}
+  .badge.unavail{background:rgba(181,66,59,.14);color:var(--danger);}
+  .badge.pending{background:rgba(107,114,104,.14);color:var(--muted);}
+  .badge.verified{background:rgba(47,143,91,.14);color:var(--success);}
+  .badge.banned{background:rgba(181,66,59,.14);color:var(--danger);}
+  .empty{text-align:center;color:var(--muted);padding:40px 10px;font-size:14px;}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:50;}
+  .toast.show{opacity:1;}
+  .banner{background:rgba(201,150,59,.14);color:#8a6414;border:1px solid rgba(201,150,59,.35);padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:20px;}
+  [data-theme="dark"] .banner{color:var(--accent);}
+  .linkbtn{font-size:13px;font-weight:600;color:var(--primary);text-decoration:none;margin-right:14px;}
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--border);}
+  td{padding:12px 10px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;}
+  td img{width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--border);}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0;}
+  @media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;}
+  .stat .num{font-family:'Fraunces',serif;font-size:28px;font-weight:600;}
+  .stat .lbl{font-size:12px;color:var(--muted);margin-top:2px;}
+  /* landing */
+  .landing{padding:60px 0;}
+  .landing h1{font-size:38px;margin:0 0 10px;max-width:600px;}
+  .landing p{color:var(--muted);font-size:16px;max-width:480px;}
+  .roleCards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px;}
+  @media(max-width:760px){.roleCards{grid-template-columns:1fr;}}
+  .roleCard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px;cursor:pointer;transition:border-color .2s,transform .2s;}
+  .roleCard:hover{border-color:var(--primary);transform:translateY(-2px);}
+  .roleCard .ic{width:44px;height:44px;border-radius:12px;background:rgba(15,92,76,.1);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;}
+  .roleCard h3{margin:0 0 6px;font-size:18px;}
+  .roleCard p{color:var(--muted);font-size:13px;margin:0;}
+  /* radar */
+  .radar-wrap{display:flex;flex-direction:column;align-items:center;padding:36px 0;}
+  .radar{position:relative;width:120px;height:120px;}
+  .ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--primary);opacity:0;animation:pulse 2.4s ease-out infinite;}
+  .ring:nth-child(2){animation-delay:.8s;} .ring:nth-child(3){animation-delay:1.6s;}
+  @keyframes pulse{0%{transform:scale(.25);opacity:.9;}100%{transform:scale(1);opacity:0;}}
+  .radar-core{position:absolute;inset:38%;border-radius:50%;background:var(--primary);}
+  .status-msg{margin-top:16px;color:var(--muted);font-size:14px;text-align:center;}
+  .result-item{display:flex;justify-content:space-between;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);}
+  .result-item:last-child{border-bottom:none;}
+  .pname{font-weight:700;font-size:15px;margin-bottom:3px;}
+  .pmeta{color:var(--muted);font-size:13px;}
+  .upload-box{border:1.5px dashed var(--border);border-radius:12px;padding:22px;text-align:center;cursor:pointer;color:var(--muted);font-size:14px;}
+  .upload-box.has-file{border-color:var(--success);color:var(--success);}
+  .upload-box img{max-height:120px;border-radius:8px;margin-top:10px;}
+  .locrow{display:flex;gap:8px;}
+  .locrow input{flex:1;}
+  .locrow button{white-space:nowrap;}
+  .hist-phone{display:flex;gap:8px;margin-bottom:18px;}
+  .hist-phone input{flex:1;}
+  .hist-phone button{padding:11px 18px;border-radius:9px;border:none;background:var(--primary);color:#fff;font-weight:600;cursor:pointer;}
+  .req-card{border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;display:flex;gap:16px;}
+  .req-card img{width:90px;height:90px;object-fit:cover;border-radius:10px;border:1px solid var(--border);flex-shrink:0;}
+  .req-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .dist-badge{background:rgba(15,92,76,.1);color:var(--primary);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+  .map-embed{margin-top:12px;border-radius:12px;overflow:hidden;border:1px solid var(--border);position:relative;width:100%;height:220px;background:var(--bg);}
+  .map-embed iframe{width:100%;height:100%;border:0;display:block;}
+  .map-caption{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:12px;color:var(--muted);}
+  .req-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+  .respond-form{display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;}
+  .respond-form.show{display:block;}
+  .authwrap{max-width:420px;margin:40px auto;}
+  .linkline{text-align:center;margin-top:14px;font-size:13px;color:var(--muted);}
+  .linkline a{color:var(--primary);font-weight:600;cursor:pointer;text-decoration:none;}
+  .err{color:var(--danger);font-size:13px;margin-top:6px;display:none;}
+  .mono{font-family:monospace;}
+  .footer-note{margin:40px 0 60px;color:var(--muted);font-size:12px;text-align:center;}
+  /* delivery toggle */
+  .modeRow{display:flex;gap:8px;margin-bottom:14px;}
+  .modeBtn{flex:1;border:1px solid var(--border);background:var(--bg);color:var(--ink);border-radius:9px;padding:11px;font-weight:600;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;}
+  .modeBtn.active{border-color:var(--primary);background:rgba(15,92,76,.08);color:var(--primary);}
+  /* payment modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(10,15,13,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px;}
+  .modal-overlay[hidden]{display:none;}
+  .modal{background:var(--card);border-radius:16px;padding:26px;max-width:380px;width:100%;border:1px solid var(--border);}
+  .payOpts{display:flex;gap:10px;margin:16px 0;}
+  .payOpt{flex:1;border:1.5px solid var(--border);border-radius:12px;padding:16px 10px;text-align:center;cursor:pointer;font-size:13px;font-weight:700;}
+  .payOpt.active{border-color:var(--primary);background:rgba(15,92,76,.08);}
+  .payOpt .ic{font-size:22px;margin-bottom:6px;}
+  .amount-row{display:flex;justify-content:space-between;align-items:baseline;margin:18px 0;padding:14px;background:var(--bg);border-radius:10px;}
+  .amount-row .amt{font-family:'Fraunces',serif;font-size:26px;font-weight:600;}
+  .pay-spinner{display:flex;flex-direction:column;align-items:center;padding:20px 0;}
+  .spin{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .pay-success{text-align:center;padding:10px 0;}
+  .pay-success .ok{width:48px;height:48px;border-radius:50%;background:var(--success);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 12px;}
+  /* chat */
+  .chatToggle{background:none;border:1px solid var(--border);border-radius:999px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;color:var(--ink);}
+  .chatPanel{display:none;margin-top:12px;border:1px solid var(--border);border-radius:10px;padding:10px;background:var(--bg);}
+  .chatPanel.show{display:block;}
+  .chatMsgs{max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:8px;}
+  .bubble{max-width:75%;padding:7px 11px;border-radius:12px;font-size:13px;line-height:1.35;}
+  .bubble.me{align-self:flex-end;background:var(--primary);color:#fff;border-bottom-right-radius:3px;}
+  .bubble.them{align-self:flex-start;background:var(--card);border:1px solid var(--border);border-bottom-left-radius:3px;}
+  .chatInputRow{display:flex;gap:6px;}
+  .chatInputRow input{flex:1;padding:8px 10px;font-size:13px;}
+  .chatInputRow button{border:none;background:var(--primary);color:#fff;border-radius:8px;padding:0 14px;font-weight:600;cursor:pointer;font-size:13px;}
+  .chatEmpty{color:var(--muted);font-size:12px;text-align:center;padding:10px 0;}
+  /* ratings */
+  .stars{display:inline-flex;gap:2px;cursor:pointer;}
+  .stars .star{font-size:18px;color:var(--border);}
+  .stars .star.filled{color:var(--accent);}
+  .stars.readonly{cursor:default;}
+  .rateRow{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12px;color:var(--muted);}
+  .avgRating{display:inline-flex;align-items:center;gap:3px;font-size:12px;color:var(--accent);font-weight:700;}
+  /* delivery status */
+  .delivery-badge{background:rgba(201,150,59,.14);color:var(--accent);font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;display:inline-block;margin-top:6px;}
+  .delivBtns{display:flex;gap:6px;margin-top:8px;}
+
+  /* ===== NEW LANDING DESIGN ===== */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+  .fade-1{animation:fadeUp .7s ease both;}
+  .fade-2{animation:fadeUp .7s ease .12s both;}
+  .fade-3{animation:fadeUp .7s ease .24s both;}
+  .fade-4{animation:fadeUp .7s ease .36s both;}
+
+  .hero-photo{position:relative;border-radius:22px;overflow:hidden;min-height:440px;display:flex;align-items:flex-end;margin:26px 0 0;background:#0A3F34;}
+  .hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;}
+  .hero-photo::before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(10,50,42,.94) 0%,rgba(10,50,42,.75) 38%,rgba(10,50,42,.15) 75%);}
+  .hero-inner{position:relative;z-index:2;padding:52px 44px;color:#fff;max-width:640px;}
+  .hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:18px;}
+  .hero-inner h1{font-size:46px;line-height:1.06;margin:0 0 16px;color:#fff;}
+  .hero-inner h1 .hl{color:var(--coral);}
+  .hero-inner p{color:rgba(255,255,255,.82);font-size:16px;max-width:480px;margin:0 0 26px;}
+  .hero-ctas{display:flex;gap:12px;flex-wrap:wrap;}
+  .btn-coral{background:var(--coral);color:#fff;border:none;border-radius:999px;padding:14px 28px;font-weight:700;font-size:15px;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 10px 24px -8px rgba(255,90,54,.55);transition:transform .15s,box-shadow .15s;}
+  .btn-coral:hover{transform:translateY(-2px);box-shadow:0 14px 28px -8px rgba(255,90,54,.65);}
+  .btn-outline-white{background:rgba(255,255,255,.08);color:#fff;border:1.5px solid rgba(255,255,255,.55);border-radius:999px;padding:13px 26px;font-weight:700;font-size:15px;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;}
+  .btn-outline-white:hover{background:rgba(255,255,255,.18);}
+  @media(max-width:760px){.hero-photo{min-height:380px;} .hero-inner{padding:34px 24px;} .hero-inner h1{font-size:32px;}}
+
+  .feature-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:56px 0;}
+  @media(max-width:900px){.feature-strip{grid-template-columns:repeat(2,1fr);}}
+  .feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .2s,box-shadow .2s;cursor:default;}
+  .feature-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px -14px rgba(15,92,76,.25);}
+  .feature-card .fimg{height:110px;overflow:hidden;position:relative;}
+  .feature-card .fimg img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+  .feature-card:hover .fimg img{transform:scale(1.08);}
+  .feature-card .fbody{padding:16px;}
+  .feature-card .fbody .ficon{font-size:20px;margin-bottom:6px;}
+  .feature-card h4{margin:0 0 4px;font-size:14.5px;font-family:'Inter',sans-serif;font-weight:700;}
+  .feature-card p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.4;}
+
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin:56px 0 22px;flex-wrap:wrap;gap:10px;}
+  .section-head h2{margin:0;font-size:26px;}
+  .section-head p{margin:4px 0 0;color:var(--muted);font-size:14px;}
+
+  .steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  @media(max-width:820px){.steps-row{grid-template-columns:1fr;}}
+  .step-card{position:relative;padding:28px 22px 22px;border:1px solid var(--border);border-radius:16px;background:var(--card);}
+  .step-num{position:absolute;top:-16px;left:22px;width:34px;height:34px;border-radius:50%;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:15px;box-shadow:0 6px 14px -4px rgba(255,90,54,.5);}
+  .step-card h4{margin:10px 0 6px;font-size:16px;}
+  .step-card p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.5;}
+
+  .pharmacy-showcase{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media(max-width:820px){.pharmacy-showcase{grid-template-columns:1fr;}}
+  .showcase-card{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--card);transition:transform .2s,box-shadow .2s;}
+  .showcase-card:hover{transform:translateY(-4px);box-shadow:0 18px 30px -16px rgba(15,92,76,.3);}
+  .showcase-card .simg{height:150px;position:relative;overflow:hidden;}
+  .showcase-card .simg img{width:100%;height:100%;object-fit:cover;}
+  .showcase-card .simg .tag{position:absolute;top:10px;left:10px;background:rgba(15,92,76,.9);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;}
+  .showcase-card .sbody{padding:16px;}
+  .showcase-card .sbody h4{margin:0 0 6px;font-size:15px;}
+  .showcase-card .sbody .smeta{color:var(--muted);font-size:12.5px;margin-bottom:10px;}
+  .showcase-card .chip{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(47,143,91,.12);color:var(--success);margin-right:6px;}
+
+  .cta-band{margin:70px 0 40px;border-radius:22px;padding:44px;background:linear-gradient(120deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;position:relative;overflow:hidden;}
+  .cta-band::after{content:"✚";position:absolute;right:-20px;bottom:-40px;font-size:220px;color:rgba(255,255,255,.06);}
+  .cta-band h3{margin:0 0 6px;font-size:24px;color:#fff;}
+  .cta-band p{margin:0;color:rgba(255,255,255,.8);font-size:14px;}
+  .roleCards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:0;}
+  @media(max-width:760px){.roleCards{grid-template-columns:1fr;}}
+  .roleCard{position:relative;border-radius:18px;overflow:hidden;cursor:pointer;min-height:190px;display:flex;align-items:flex-end;transition:transform .2s;border:1px solid var(--border);}
+  .roleCard:hover{transform:translateY(-4px);}
+  .roleCard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .roleCard::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,50,42,.15) 0%,rgba(10,20,17,.88) 100%);}
+  .roleCard .rc-body{position:relative;z-index:2;padding:20px;color:#fff;}
+  .roleCard .ic{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.16);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:10px;}
+  .roleCard h3{margin:0 0 4px;font-size:17px;color:#fff;}
+  .roleCard p{color:rgba(255,255,255,.82);font-size:12.5px;margin:0;}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<header>
+  <div class="headbar">
+    <div class="logo" id="logoHome"><span class=""></span> OS <span style="color:var(--coral);">Medicine</span></div>
+    <div class="roleNav">
+      <button class="roleBtn" data-view="patient">Patient</button>
+      <button class="roleBtn" data-view="pharmacy">Pharmacy</button>
+      <button class="roleBtn" data-view="admin">Admin</button>
+    </div>
+    <div class="headctrls">
+      <button class="ghost" id="langBtn">አማርኛ</button>
+      <button class="ghost" id="themeBtn">🌙</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== LANDING ===================== -->
+<div id="view-landing">
+  <div class="wrap">
+    <div class="hero-photo fade-1">
+      <img src="https://images.unsplash.com/photo-1642055514517-7b52288890ec?w=1400&auto=format&fit=crop&q=80" alt="Pharmacy shelves stocked with medicine">
+      <div class="hero-inner">
+        <span class="hero-badge">🇪🇹 Serving Addis Ababa &amp; beyond</span>
+        <h1>Find your medicine <span class="hl">anywhere</span> in Ethiopia.</h1>
+        <p>OS MEDICINE helps patients locate prescribed medicines fast. Upload your prescription, we ping every trusted pharmacy nearby, and bring the answers straight back to you.</p>
+        <div class="hero-ctas">
+          <button class="btn-coral" data-view="patient">🔍 Search Medicine</button>
+          <button class="btn-outline-white" data-view="pharmacy">🏪 I run a pharmacy</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-strip fade-2">
+      <div class="feature-card">
+        <div class="fimg"><img src="https://cdn.rehabfiles.com/sites/primroselodge/wp-content/uploads/2025/04/doctor-giving-prescription-to-paitent.jpeg" alt="Uploading a prescription"></div>
+        <div class="fbody"><div class="ficon">📸</div><h4>Upload Prescription</h4><p>Send a clear photo of your prescription securely.</p></div>
+      </div>
+      <div class="feature-card">
+        <div class="fimg"><img src="https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=500&auto=format&fit=crop&q=80" alt="Assorted medication"></div>
+        <div class="fbody"><div class="ficon">💊</div><h4>Search Medicine</h4><p>We check availability across nearby pharmacies instantly.</p></div>
+      </div>
+      <div class="feature-card">
+        <div class="fimg"><img src="https://images.unsplash.com/photo-1603706580932-6befcf7d8521?w=500&auto=format&fit=crop&q=80" alt="Pharmacy cross sign"></div>
+        <div class="fbody"><div class="ficon">📍</div><h4>Locate Pharmacies</h4><p>See distance, directions and phone numbers on a map.</p></div>
+      </div>
+      <div class="feature-card">
+        <div class="fimg"><img src="https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=500&auto=format&fit=crop&q=80" alt="Medicine bottles ready for delivery"></div>
+        <div class="fbody"><div class="ficon">🛵</div><h4>Delivery Support</h4><p>Get medicine delivered to your door, or pick it up yourself.</p></div>
+      </div>
+    </div>
+
+    <div class="section-head fade-3">
+      <div><h2>How it works</h2><p>From prescription to pharmacy in three simple steps.</p></div>
+    </div>
+    <div class="steps-row fade-3">
+      <div class="step-card"><div class="step-num">1</div><h4>Upload &amp; pay 50 ETB</h4><p>Snap your prescription, drop your location, and pay the one-time search fee with telebirr or Chapa.</p></div>
+      <div class="step-card"><div class="step-num">2</div><h4>We ping nearby pharmacies</h4><p>Every verified pharmacy within 5km gets your request instantly and checks their stock.</p></div>
+      <div class="step-card"><div class="step-num">3</div><h4>Get your answer fast</h4><p>See who has it, chat with them, choose pickup or delivery, and rate your experience.</p></div>
+    </div>
+
+    <div class="section-head fade-4">
+      <div><h2>Featured pharmacies</h2><p>A preview of the kind of partners on the network — real pharmacies appear once approved by admin.</p></div>
+    </div>
+    <div class="pharmacy-showcase fade-4">
+      <div class="showcase-card">
+        <div class="simg"><img src="https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=500&auto=format&fit=crop&q=80" alt="Health Pharmacy shelves"><span class="tag">Example</span></div>
+        <div class="sbody"><h4>Health Pharmacy</h4><div class="smeta">📍 Bole, Addis Ababa</div><span class="chip">✔ Verified</span><span class="chip">🛵 Delivery</span></div>
+      </div>
+      <div class="showcase-card">
+        <div class="simg"><img src="https://images.unsplash.com/photo-1555633514-abcee6ab92e1?w=500&auto=format&fit=crop&q=80" alt="MediCare Pharmacy shelves"><span class="tag">Example</span></div>
+        <div class="sbody"><h4>MediCare Pharmacy</h4><div class="smeta">📍 Piassa, Addis Ababa</div><span class="chip">✔ Open 24h</span><span class="chip">🛵 Same day</span></div>
+      </div>
+      <div class="showcase-card">
+        <div class="simg"><img src="https://images.unsplash.com/photo-1576602976047-174e57a47881?w=500&auto=format&fit=crop&q=80" alt="LifeCare Pharmacy storefront"><span class="tag">Example</span></div>
+        <div class="sbody"><h4>LifeCare Pharmacy</h4><div class="smeta">📍 Kazanchis, Addis Ababa</div><span class="chip">✔ Verified</span><span class="chip">🚶 Pickup</span></div>
+      </div>
+    </div>
+
+    <div class="cta-band fade-4">
+      <div><h3>Run a pharmacy in Ethiopia?</h3><p>Register free, get verified, and start receiving nearby prescription requests today.</p></div>
+      <button class="btn-coral" data-view="pharmacy">Register your pharmacy →</button>
+    </div>
+
+    <div class="section-head fade-4" style="margin-bottom:0;">
+      <div><h2>Choose your role</h2><p>One platform for patients, pharmacies, and admins.</p></div>
+    </div>
+    <div class="roleCards" style="margin:22px 0 50px;">
+      <div class="roleCard" data-view="patient">
+        <img src="https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=500&auto=format&fit=crop&q=80" alt="Patient">
+        <div class="rc-body"><div class="ic">🧑‍🤝‍🧑</div><h3>I'm a patient</h3><p>Upload a prescription and find who has it in stock nearby.</p></div>
+      </div>
+      <div class="roleCard" data-view="pharmacy">
+        <img src="https://images.unsplash.com/photo-1642055514517-7b52288890ec?w=500&auto=format&fit=crop&q=80" alt="Pharmacy">
+        <div class="rc-body"><div class="ic">🏪</div><h3>I run a pharmacy</h3><p>Register, receive nearby requests, respond in one tap.</p></div>
+      </div>
+      <div class="roleCard" data-view="admin">
+        <img src="https://images.unsplash.com/photo-1603706580932-6befcf7d8521?w=500&auto=format&fit=crop&q=80" alt="Admin">
+        <div class="rc-body"><div class="ic">🛡️</div><h3>I'm an admin</h3><p>Approve pharmacies and monitor the whole network.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PATIENT VIEW ===================== -->
+<div id="view-patient" style="display:none;">
+  <div class="wrap">
+    <div class="hero-photo fade-1" style="min-height:220px;margin-top:20px;">
+      <img src="https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=1400&auto=format&fit=crop&q=80" alt="Medicine pills">
+      <div class="hero-inner" style="padding:32px 34px;">
+        <span class="hero-badge" id="tEyebrow">Patient</span>
+        <h1 id="tHeadline" style="font-size:28px;">Stop calling every pharmacy in town.</h1>
+        <p id="tSub" style="font-size:14px;">Upload your prescription once. We ping every pharmacy nearby and bring the answers back to you.</p>
+      </div>
+    </div>
+    <div class="tabs" style="margin-top:24px;">
+      <div class="tab active" data-ptab="search" id="tTabSearch">Find medicine</div>
+      <div class="tab" data-ptab="history" id="tTabHistory">My requests</div>
+    </div>
+
+    <div id="ppanel-search">
+      <div class="card" id="formCard">
+        <div class="field"><label id="lName">Your name</label><input id="pname" placeholder="e.g. Selam Tesfaye"></div>
+        <div class="field"><label id="lPhone">Phone number</label><input id="pphone" placeholder="09xx xxx xxx"></div>
+        <div class="field">
+          <label id="lUpload">Prescription photo</label>
+          <div class="upload-box" id="uploadBox">
+            <div id="uploadText">Tap to take a photo or choose a file</div>
+            <input type="file" id="fileInput" accept="image/*" style="display:none">
+          </div>
+        </div>
+        <div class="field">
+          <label id="lLoc">Your location</label>
+          <div class="locrow">
+            <input id="latInp" placeholder="Latitude" inputmode="decimal">
+            <input id="lngInp" placeholder="Longitude" inputmode="decimal">
+            <button class="ghost" id="gpsBtn">📍 Use GPS</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>How do you want it?</label>
+          <div class="modeRow">
+            <button type="button" class="modeBtn active" id="modePickup">🚶 Pickup</button>
+            <button type="button" class="modeBtn" id="modeDelivery">🛵 Delivery</button>
+          </div>
+          <div id="deliveryAddrField" style="display:none;">
+            <input id="deliveryAddr" placeholder="Delivery address (e.g. house/floor, street, area)">
+          </div>
+        </div>
+        <button class="btn-primary" id="submitBtn">Find Medicine — 50 ETB</button>
+      </div>
+
+      <div class="card" id="searchingCard" style="display:none;margin-top:18px;">
+        <div class="radar-wrap">
+          <div class="radar"><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="radar-core"></div></div>
+          <div class="status-msg" id="searchStatus">Sending your prescription to nearby pharmacies…</div>
+          <div style="margin-top:14px;font-size:12px;color:var(--muted);" id="lastCheckedMsg">Checking for replies…</div>
+          <button class="ghost" id="manualCheckBtn" style="margin-top:10px;">🔄 Check now</button>
+        </div>
+      </div>
+
+      <div class="card" id="resultsCard" style="display:none;margin-top:18px;">
+        <h3 id="resultsTitle" style="margin-top:0;">Pharmacy responses</h3>
+        <div id="resultsList"></div>
+      </div>
+    </div>
+
+    <div id="ppanel-history" style="display:none;">
+      <div class="hist-phone"><input id="histPhone" placeholder="Enter your phone number"><button id="histBtn">View</button></div>
+      <div id="histList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- payment modal -->
+<div class="modal-overlay" id="payOverlay" hidden>
+  <div class="modal">
+    <div id="payStepChoose">
+      <h3 style="margin:0 0 4px;">Pay to send your request</h3>
+      <p style="color:var(--muted);font-size:13px;margin:0;">We charge a small fee to send your prescription to nearby pharmacies.</p>
+      <div class="payOpts">
+        <div class="payOpt active" id="optTelebirr"><div class="ic">📱</div>telebirr</div>
+        <div class="payOpt" id="optChapa"><div class="ic">💳</div>Chapa</div>
+      </div>
+      <div class="field"><label>Payment phone number</label><input id="payPhone" placeholder="09xx xxx xxx"></div>
+      <div class="amount-row"><span style="color:var(--muted);font-size:13px;">Total</span><span class="amt">50 ETB</span></div>
+      <button class="btn-primary" id="payConfirmBtn">Confirm payment</button>
+      <button class="ghost" id="payCancelBtn" style="width:100%;margin-top:8px;">Cancel</button>
+    </div>
+    <div id="payStepSpinner" style="display:none;">
+      <div class="pay-spinner"><div class="spin"></div><div style="margin-top:14px;color:var(--muted);font-size:13px;" id="payProcessingLabel">Processing with telebirr…</div></div>
+    </div>
+    <div id="payStepSuccess" style="display:none;">
+      <div class="pay-success"><div class="ok">✔</div><h3 style="margin:0 0 4px;">Payment received</h3><p style="color:var(--muted);font-size:13px;">Sending your prescription to nearby pharmacies…</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PHARMACY VIEW ===================== -->
+<div id="view-pharmacy" style="display:none;">
+  <div id="pharm-authView">
+    <div class="wrap">
+      <div class="authwrap">
+        <div class="eyebrow">Pharmacy partner</div>
+        <h2 id="pharmAuthTitle" style="margin-top:0;">Log in to your pharmacy</h2>
+        <div class="card">
+          <div id="pharmLoginFields">
+            <div class="field"><label>Phone or email</label><input id="loginId" placeholder="e.g. 0911xxxxxx"></div>
+            <div class="field"><label>Password</label><input id="loginPw" type="password"></div>
+            <div class="err" id="loginErr">No pharmacy found with that phone/email and password.</div>
+            <button class="btn-primary" id="loginBtn">Log in</button>
+          </div>
+          <div id="pharmRegisterFields" style="display:none;">
+            <div class="grid2">
+              <div class="field"><label>Pharmacy name</label><input id="regName"></div>
+              <div class="field"><label>Pharmacist name</label><input id="regPharmacist"></div>
+            </div>
+            <div class="grid2">
+              <div class="field"><label>Phone</label><input id="regPhone"></div>
+              <div class="field"><label>Email</label><input id="regEmail"></div>
+            </div>
+            <div class="field"><label>Password</label><input id="regPw" type="password"></div>
+            <div class="field"><label>Address</label><input id="regAddress" placeholder="e.g. Bole, Addis Ababa"></div>
+            <div class="grid2">
+              <div class="field"><label>Latitude</label><input id="regLat"></div>
+              <div class="field"><label>Longitude</label><input id="regLng"></div>
+            </div>
+            <button class="ghost" id="regGpsBtn" style="width:100%;margin-bottom:14px;">📍 Use my current location</button>
+            <div class="field"><label>Business license number</label><input id="regLicense" placeholder="For admin verification"></div>
+            <button class="btn-primary" id="registerBtn">Register pharmacy</button>
+          </div>
+          <div class="linkline"><span id="switchPrompt">New pharmacy? <a id="switchToRegister">Register here</a></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pharm-appView" style="display:none;">
+    <div class="wrap" style="padding-bottom:40px;">
+      <div class="headbar" style="padding-left:0;padding-right:0;">
+        <span id="pharmNameTag" style="font-size:13px;color:var(--muted);"></span>
+        <button class="ghost" id="pharmLogoutBtn">Log out of pharmacy</button>
+      </div>
+      <div id="unverifiedBanner" class="banner" style="display:none;">Your pharmacy is pending admin verification. You'll start receiving prescription requests once approved.</div>
+      <div class="stats">
+        <div class="stat"><div class="num" id="statNew">0</div><div class="lbl">New requests</div></div>
+        <div class="stat"><div class="num" id="statActive">0</div><div class="lbl">Active nearby</div></div>
+        <div class="stat"><div class="num" id="statResponded">0</div><div class="lbl">Responded</div></div>
+        <div class="stat"><div class="num" id="statToday">0</div><div class="lbl">Customers today</div></div>
+      </div>
+      <div class="tabs">
+        <div class="tab active" data-phtab="incoming">Incoming requests</div>
+        <div class="tab" data-phtab="history">History</div>
+        <div class="tab" data-phtab="profile">Profile</div>
+      </div>
+      <div id="phpanel-incoming"><div id="incomingList"></div></div>
+      <div id="phpanel-history" style="display:none;"><div id="historyList"></div></div>
+      <div id="phpanel-profile" style="display:none;">
+        <div class="card">
+          <div class="grid2">
+            <div class="field"><label>Pharmacy name</label><input id="pfName"></div>
+            <div class="field"><label>Phone</label><input id="pfPhone"></div>
+          </div>
+          <div class="grid2">
+            <div class="field"><label>Address</label><input id="pfAddress"></div>
+            <div class="field"><label>Verification status</label><input id="pfStatus" disabled></div>
+          </div>
+          <button class="btn-primary" id="pfSaveBtn">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ADMIN VIEW ===================== -->
+<div id="view-admin" style="display:none;">
+  <div id="admin-authView">
+    <div class="wrap">
+      <div class="authwrap">
+        <div class="eyebrow">Admin access</div>
+        <h2 style="margin-top:0;">Enter admin password</h2>
+        <div class="card">
+          <div class="field"><input id="adminPw" type="password" placeholder="Admin password"></div>
+          <button class="btn-primary" id="adminLoginBtn">Enter</button>
+          <div style="color:var(--muted);font-size:12px;margin-top:12px;">thank you for trusted us</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="admin-appView" style="display:none;">
+    <div class="wrap" style="padding-bottom:40px;">
+      <div class="headbar" style="padding-left:0;padding-right:0;">
+        <span style="font-size:13px;color:var(--muted);">Admin dashboard</span>
+        <button class="ghost" id="adminLogoutBtn">Log out of admin</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num" id="statPharm">0</div><div class="lbl">Total pharmacies</div></div>
+        <div class="stat"><div class="num" id="statPending">0</div><div class="lbl">Pending verification</div></div>
+        <div class="stat"><div class="num" id="statReq">0</div><div class="lbl">Prescription requests</div></div>
+        <div class="stat"><div class="num" id="statRate">0%</div><div class="lbl">Fulfilled rate</div></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num" id="statRevenue">0 ETB</div><div class="lbl">Revenue collected</div></div>
+        <div class="stat"><div class="num" id="statAvgRating">—</div><div class="lbl">Platform avg rating</div></div>
+        <div class="stat"><div class="num" id="statDelivery">0</div><div class="lbl">Delivery orders</div></div>
+        <div class="stat"><div class="num" id="statChats">0</div><div class="lbl">Chat conversations</div></div>
+      </div>
+      <div class="tabs">
+        <div class="tab active" data-adtab="pharmacies">Pharmacies</div>
+        <div class="tab" data-adtab="requests">Requests</div>
+      </div>
+      <div id="adpanel-pharmacies">
+        <table><thead><tr><th>Pharmacy</th><th>Phone</th><th>Rating</th><th>License</th><th>Status</th><th>Actions</th></tr></thead><tbody id="pharmTable"></tbody></table>
+      </div>
+      <div id="adpanel-requests" style="display:none;">
+        <table><thead><tr><th>Photo</th><th>Patient</th><th>Time</th><th>Responses</th><th>Status</th></tr></thead><tbody id="reqTable"></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap"><div class="footer-note">build — data is stored securely for this app only. For production use, connect telebirr/Chapa payments, proper password security, and photo storage via a service like Cloudinary.</div></div>
+
+<script>
+/* ============ SHARED CORE ============ */
+const DB_KEY = 'osmedicine-data';
+let storageOK = true;
+let memDB = {pharmacies:[], prescriptions:[]};
+
+/* --- Persistent storage layer ---
+   This app runs as a standalone HTML file (opened directly in a browser,
+   or hosted on a server), so it can't use Claude's artifact-only
+   window.storage API. Instead we use IndexedDB (large capacity, good for
+   the base64 prescription photos) with an automatic fallback to
+   localStorage, and finally to in-memory storage if neither is available. */
+const IDB_NAME = 'osmedicine-idb';
+const IDB_STORE = 'kv';
+let _idbPromise = null;
+function openIDB(){
+  if(_idbPromise) return _idbPromise;
+  _idbPromise = new Promise((resolve, reject)=>{
+    if(!window.indexedDB){ reject(new Error('no indexeddb')); return; }
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = ()=>{ req.result.createObjectStore(IDB_STORE); };
+    req.onsuccess = ()=> resolve(req.result);
+    req.onerror = ()=> reject(req.error);
+  });
+  return _idbPromise;
+}
+function idbGet(key){
+  return openIDB().then(db=> new Promise((resolve,reject)=>{
+    const tx = db.transaction(IDB_STORE,'readonly');
+    const rq = tx.objectStore(IDB_STORE).get(key);
+    rq.onsuccess = ()=> resolve(rq.result===undefined ? null : rq.result);
+    rq.onerror = ()=> reject(rq.error);
+  }));
+}
+function idbSet(key, value){
+  return openIDB().then(db=> new Promise((resolve,reject)=>{
+    const tx = db.transaction(IDB_STORE,'readwrite');
+    tx.objectStore(IDB_STORE).put(value, key);
+    tx.oncomplete = ()=> resolve();
+    tx.onerror = ()=> reject(tx.error);
+  }));
+}
+async function loadDB(){
+  let db;
+  try{
+    const raw = await idbGet(DB_KEY);
+    storageOK = true;
+    db = raw ? JSON.parse(raw) : {pharmacies:[],prescriptions:[]};
+  }catch(e1){
+    try{
+      const raw = localStorage.getItem(DB_KEY);
+      storageOK = true;
+      db = raw ? JSON.parse(raw) : {pharmacies:[],prescriptions:[]};
+    }catch(e2){
+      db = memDB;
+    }
+  }
+  window._lastDB = db;
+  return db;
+}
+async function saveDB(db){
+  const json = JSON.stringify(db);
+  try{
+    await idbSet(DB_KEY, json);
+    storageOK = true;
+  }catch(e1){
+    try{
+      localStorage.setItem(DB_KEY, json);
+      storageOK = true;
+    }catch(e2){
+      storageOK=false; memDB=db;
+      showToast('Storage unavailable — changes are temporary.');
+    }
+  }
+}
+function uid(p){return p+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+/* --- Google Maps embed ---
+   Leave MAPS_API_KEY empty to use Google's free "legacy" embed (no key,
+   no billing, works out of the box). If you later create a key at
+   https://console.cloud.google.com (enable "Maps Embed API"), paste it
+   below and the app will automatically switch to the official, more
+   reliable Directions embed. */
+const MAPS_API_KEY = '';
+function buildDirectionsMapSrc(fromLat, fromLng, toLat, toLng){
+  if(MAPS_API_KEY){
+    return `https://www.google.com/maps/embed/v1/directions?key=${MAPS_API_KEY}&origin=${fromLat},${fromLng}&destination=${toLat},${toLng}&mode=driving`;
+  }
+  return `https://www.google.com/maps?saddr=${fromLat},${fromLng}&daddr=${toLat},${toLng}&t=m&z=13&output=embed`;
+}
+function buildPlaceMapSrc(lat, lng){
+  if(MAPS_API_KEY){
+    return `https://www.google.com/maps/embed/v1/place?key=${MAPS_API_KEY}&q=${lat},${lng}&zoom=15`;
+  }
+  return `https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+}
+function haversine(lat1,lon1,lat2,lon2){
+  const R=6371, toRad=d=>d*Math.PI/180;
+  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
+  const a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function showToast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+/* ============ VIEW ROUTER ============ */
+let activePollers = [];
+function stopPollers(){ activePollers.forEach(clearInterval); activePollers=[]; }
+function goView(name){
+  stopPollers();
+  ['landing','patient','pharmacy','admin'].forEach(v=>{
+    document.getElementById('view-'+v).style.display = (v===name)?'block':'none';
+  });
+  document.querySelectorAll('.roleBtn').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+  if(name==='patient'){ patientRefreshHistoryVisible(); }
+  if(name==='pharmacy'){ if(pharmSession){ pharmEnterApp(); } }
+  if(name==='admin'){ if(adminAuthed){ adminEnterApp(); } }
+}
+document.getElementById('logoHome').onclick=()=>goView('landing');
+document.querySelectorAll('[data-view]').forEach(el=> el.onclick=()=>goView(el.dataset.view));
+
+/* theme + language (global, mainly used on patient view) */
+const themeBtn=document.getElementById('themeBtn');
+themeBtn.onclick=()=>{
+  const isDark=document.body.getAttribute('data-theme')==='dark';
+  document.body.setAttribute('data-theme', isDark?'':'dark');
+  themeBtn.textContent = isDark?'🌙':'☀️';
+};
+const strings = {
+  en:{eyebrow:'Patient', headline:'Stop calling every pharmacy in town.', sub:'Upload your prescription once. We ping every pharmacy nearby and bring the answers back to you.',
+     tabSearch:'Find medicine', tabHistory:'My requests', lName:'Your name', lPhone:'Phone number', lUpload:'Prescription photo',
+     lLoc:'Your location', submit:'Find Medicine', uploadText:'Tap to take a photo or choose a file', resultsTitle:'Pharmacy responses',
+     searching:'Sending your prescription to nearby pharmacies…', langBtn:'አማርኛ'},
+  am:{eyebrow:'ታካሚ', headline:'ወደ እያንዳንዱ ፋርማሲ መደወል ያቁሙ።', sub:'የሕክምና ማዘዣዎን አንድ ጊዜ ይላኩ። በአቅራቢያዎ ላሉ ፋርማሲዎች እንልካለን እና መልሱን እናመጣልዎታለን።',
+     tabSearch:'መድሃኒት ፈልግ', tabHistory:'ጥያቄዎቼ', lName:'ስምዎ', lPhone:'ስልክ ቁጥር', lUpload:'የመድሃኒት ማዘዣ ፎቶ',
+     lLoc:'አካባቢዎ', submit:'መድሃኒት ፈልግ', uploadText:'ፎቶ ለማንሳት ወይም ፋይል ለመምረጥ ይንኩ', resultsTitle:'የፋርማሲ ምላሾች',
+     searching:'የመድሃኒት ማዘዣዎን ለአቅራቢያ ፋርማሲዎች በመላክ ላይ…', langBtn:'English'}
+};
+let curLang='en';
+const langBtn=document.getElementById('langBtn');
+function applyLang(){
+  const s=strings[curLang];
+  document.getElementById('tEyebrow').textContent=s.eyebrow;
+  document.getElementById('tHeadline').textContent=s.headline;
+  document.getElementById('tSub').textContent=s.sub;
+  document.getElementById('tTabSearch').textContent=s.tabSearch;
+  document.getElementById('tTabHistory').textContent=s.tabHistory;
+  document.getElementById('lName').textContent=s.lName;
+  document.getElementById('lPhone').textContent=s.lPhone;
+  document.getElementById('lUpload').textContent=s.lUpload;
+  document.getElementById('lLoc').textContent=s.lLoc;
+  document.getElementById('submitBtn').textContent=s.submit;
+  document.getElementById('uploadText').textContent=s.uploadText;
+  document.getElementById('resultsTitle').textContent=s.resultsTitle;
+  document.getElementById('searchStatus').textContent=s.searching;
+  langBtn.textContent=s.langBtn;
+  document.body.toggleAttribute('lang-am', curLang==='am');
+}
+langBtn.onclick=()=>{curLang = curLang==='en'?'am':'en'; applyLang();};
+applyLang();
+
+/* ============ PATIENT LOGIC ============ */
+document.querySelectorAll('[data-ptab]').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('[data-ptab]').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('ppanel-search').style.display = t.dataset.ptab==='search'?'block':'none';
+    document.getElementById('ppanel-history').style.display = t.dataset.ptab==='history'?'block':'none';
+  };
+});
+let photoBase64=null;
+const uploadBox=document.getElementById('uploadBox');
+const fileInput=document.getElementById('fileInput');
+uploadBox.onclick=()=>fileInput.click();
+fileInput.onchange=()=>{
+  const f=fileInput.files[0]; if(!f)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    photoBase64=e.target.result;
+    uploadBox.classList.add('has-file');
+    uploadBox.innerHTML = `<div>${f.name}</div><img src="${photoBase64}">`;
+  };
+  reader.readAsDataURL(f);
+};
+document.getElementById('gpsBtn').onclick=()=>{
+  if(!navigator.geolocation){showToast('GPS not available in this browser');return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    document.getElementById('latInp').value=pos.coords.latitude.toFixed(5);
+    document.getElementById('lngInp').value=pos.coords.longitude.toFixed(5);
+    showToast('Location captured');
+  }, err=>showToast('Could not get location: '+err.message));
+};
+let currentPrescriptionId=null;
+let deliveryMode='pickup';
+document.getElementById('modePickup').onclick=()=>{
+  deliveryMode='pickup';
+  document.getElementById('modePickup').classList.add('active');
+  document.getElementById('modeDelivery').classList.remove('active');
+  document.getElementById('deliveryAddrField').style.display='none';
+};
+document.getElementById('modeDelivery').onclick=()=>{
+  deliveryMode='delivery';
+  document.getElementById('modeDelivery').classList.add('active');
+  document.getElementById('modePickup').classList.remove('active');
+  document.getElementById('deliveryAddrField').style.display='block';
+};
+
+let payMethod='telebirr';
+document.getElementById('optTelebirr').onclick=()=>{ payMethod='telebirr'; document.getElementById('optTelebirr').classList.add('active'); document.getElementById('optChapa').classList.remove('active'); };
+document.getElementById('optChapa').onclick=()=>{ payMethod='chapa'; document.getElementById('optChapa').classList.add('active'); document.getElementById('optTelebirr').classList.remove('active'); };
+document.getElementById('payCancelBtn').onclick=()=>{ document.getElementById('payOverlay').hidden=true; };
+
+document.getElementById('submitBtn').onclick=async ()=>{
+  const name=document.getElementById('pname').value.trim();
+  const phone=document.getElementById('pphone').value.trim();
+  const lat=parseFloat(document.getElementById('latInp').value);
+  const lng=parseFloat(document.getElementById('lngInp').value);
+  if(!name||!phone){showToast('Please enter your name and phone number');return;}
+  if(!photoBase64){showToast('Please upload your prescription photo');return;}
+  if(isNaN(lat)||isNaN(lng)){showToast('Please set your location');return;}
+  if(deliveryMode==='delivery' && !document.getElementById('deliveryAddr').value.trim()){showToast('Please enter a delivery address');return;}
+  document.getElementById('payPhone').value = phone;
+  document.getElementById('payStepChoose').style.display='block';
+  document.getElementById('payStepSpinner').style.display='none';
+  document.getElementById('payStepSuccess').style.display='none';
+  document.getElementById('payOverlay').hidden=false;
+};
+
+document.getElementById('manualCheckBtn').onclick=()=>{ patientRefreshResults(); showToast('Checked for replies'); };
+document.getElementById('payConfirmBtn').onclick=async ()=>{
+  const payPhone = document.getElementById('payPhone').value.trim();
+  if(!payPhone){showToast('Enter the phone number to pay with');return;}
+  document.getElementById('payStepChoose').style.display='none';
+  document.getElementById('payStepSpinner').style.display='block';
+  document.getElementById('payProcessingLabel').textContent = `Processing with ${payMethod==='telebirr'?'telebirr':'Chapa'}…`;
+
+  await new Promise(r=>setTimeout(r, 1400));
+
+  document.getElementById('payStepSpinner').style.display='none';
+  document.getElementById('payStepSuccess').style.display='block';
+
+  const name=document.getElementById('pname').value.trim();
+  const phone=document.getElementById('pphone').value.trim();
+  const lat=parseFloat(document.getElementById('latInp').value);
+  const lng=parseFloat(document.getElementById('lngInp').value);
+  const delAddr = deliveryMode==='delivery' ? document.getElementById('deliveryAddr').value.trim() : '';
+
+  const db = await loadDB();
+  const rec = {
+    id:uid('rx'), patientName:name, patientPhone:phone, photo:photoBase64, lat, lng, status:'pending', createdAt:Date.now(),
+    responses:[], deliveryMode, deliveryAddress:delAddr,
+    paid:true, paymentMethod:payMethod, paymentPhone:payPhone, paymentAmount:50, paymentRef:uid('txn')
+  };
+  db.prescriptions.push(rec);
+  await saveDB(db);
+  currentPrescriptionId = rec.id;
+
+  await new Promise(r=>setTimeout(r, 900));
+  document.getElementById('payOverlay').hidden=true;
+
+  document.getElementById('formCard').style.display='none';
+  document.getElementById('searchingCard').style.display='block';
+  document.getElementById('resultsCard').style.display='none';
+  const t = setInterval(patientRefreshResults, 3000);
+  activePollers.push(t);
+  patientRefreshResults();
+};
+let seenAvailable = {};
+async function patientRefreshResults(){
+  if(!currentPrescriptionId) return;
+  const db = await loadDB();
+  const rec = db.prescriptions.find(p=>p.id===currentPrescriptionId);
+  const stamp = document.getElementById('lastCheckedMsg');
+  if(!rec){
+    if(stamp) stamp.textContent = 'Could not find your request (storage mismatch) — last checked ' + new Date().toLocaleTimeString();
+    return;
+  }
+  const list = document.getElementById('resultsList');
+  if(rec.responses.length===0){
+    document.getElementById('searchingCard').style.display='block';
+    document.getElementById('resultsCard').style.display='none';
+    if(stamp) stamp.textContent = 'No replies yet — last checked ' + new Date().toLocaleTimeString();
+    return;
+  }
+  document.getElementById('searchingCard').style.display='none';
+  document.getElementById('resultsCard').style.display='block';
+  const withDist = rec.responses.map(r=>{
+    const ph = db.pharmacies.find(p=>p.id===r.pharmacyId);
+    const dist = ph ? haversine(rec.lat,rec.lng,ph.lat,ph.lng) : null;
+    return {...r, pharmacy: ph, dist};
+  }).sort((a,b)=>{
+    if(a.available!==b.available) return a.available ? -1 : 1;
+    return (a.dist||99)-(b.dist||99);
+  });
+  withDist.forEach(r=>{
+    const key = rec.id+'_'+r.pharmacyId;
+    if(r.available && !seenAvailable[key]){
+      seenAvailable[key] = true;
+      showToast(`✔ ${r.pharmacy ? r.pharmacy.name : 'A pharmacy'} has your medicine — location shown below`);
+    }
+  });
+  list.innerHTML = withDist.map(r=>{
+    const badge = r.available ? `<span class="badge avail">✔ Available</span>` : `<span class="badge unavail">✘ Not available</span>`;
+    const distTxt = r.dist!==null ? r.dist.toFixed(1)+' km away' : '';
+    const mapLink = r.pharmacy ? `https://www.google.com/maps/search/?api=1&query=${r.pharmacy.lat},${r.pharmacy.lng}` : '#';
+    const tel = r.pharmacy ? `tel:${r.pharmacy.phone}` : '#';
+    const avg = pharmacyAvgRating(r.pharmacy);
+    const avgHtml = avg ? `<span class="avgRating">★ ${avg.toFixed(1)}</span>` : '';
+    const deliveryHtml = (rec.deliveryMode==='delivery' && r.available)
+      ? `<div class="delivery-badge">🛵 ${r.deliveryFee ? 'Delivery fee: '+r.deliveryFee+' ETB · ' : ''}${(r.deliveryStatus||'pending')==='pending'?'Delivery pending':(r.deliveryStatus==='out_for_delivery'?'Out for delivery':'Delivered')}</div>`
+      : '';
+    const ratingHtml = r.available ? renderRatingBlock(rec.id, r.pharmacyId, r.rating) : '';
+    const chatKey = rec.id+'_'+r.pharmacyId;
+    const mapHtml = (r.available && r.pharmacy && rec.lat!=null && rec.lng!=null)
+      ? `<div class="map-embed"><iframe src="${buildDirectionsMapSrc(rec.lat, rec.lng, r.pharmacy.lat, r.pharmacy.lng)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
+         <div class="map-caption"><span>📍 ${r.pharmacy.address || r.pharmacy.name}</span><a class="linkbtn" href="${mapLink}" target="_blank">Open in Google Maps</a></div>`
+      : '';
+    return `<div class="result-item" style="flex-direction:column;align-items:stretch;${r.available?'background:rgba(47,143,91,.05);border-radius:12px;padding:12px;':''}">
+      <div style="display:flex;justify-content:space-between;gap:14px;">
+        <div style="flex:1;">
+          <div class="pname">${r.pharmacy ? r.pharmacy.name : 'Pharmacy'} ${avgHtml}</div>
+          <div class="pmeta">${distTxt}${r.medicine ? ' · '+r.medicine+(r.quantity?' ('+r.quantity+')':'') : ''}</div>
+          <div style="margin-top:8px;"><a class="linkbtn" href="${tel}">📞 Call</a><a class="linkbtn" href="${mapLink}" target="_blank">🧭 Directions</a><button class="chatToggle" onclick="toggleChat('${rec.id}','${r.pharmacyId}')">💬 Chat</button></div>
+          ${deliveryHtml}
+          ${mapHtml}
+          ${ratingHtml}
+        </div>
+        <div>${badge}</div>
+      </div>
+      <div class="chatPanel ${openChats[chatKey]?'show':''}" id="chat-${chatKey}">
+        ${renderChatMsgs(r.chat, 'patient')}
+        <div class="chatInputRow"><input id="chatIn-${chatKey}" placeholder="Message the pharmacy…"><button onclick="sendChatMsg('${rec.id}','${r.pharmacyId}','patient')">Send</button></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ---- chat helpers (shared by patient + pharmacy) ---- */
+let openChats = {};
+window.toggleChat = function(rxId, phId){
+  const key = rxId+'_'+phId;
+  openChats[key] = !openChats[key];
+  const el = document.getElementById('chat-'+key);
+  if(el) el.classList.toggle('show', openChats[key]);
+};
+function renderChatMsgs(chat, viewerRole){
+  if(!chat || chat.length===0) return `<div class="chatEmpty">No messages yet — say hello.</div>`;
+  return `<div class="chatMsgs">${chat.map(m=>{
+    const mine = m.sender===viewerRole;
+    return `<div class="bubble ${mine?'me':'them'}">${escapeHtml(m.text)}</div>`;
+  }).join('')}</div>`;
+}
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+window.sendChatMsg = async function(rxId, phId, sender){
+  const key = rxId+'_'+phId;
+  const inp = document.getElementById('chatIn-'+key);
+  const text = inp ? inp.value.trim() : '';
+  if(!text) return;
+  const db = await loadDB();
+  const p = db.prescriptions.find(x=>x.id===rxId);
+  if(!p) return;
+  const r = p.responses.find(x=>x.pharmacyId===phId);
+  if(!r) return;
+  if(!r.chat) r.chat = [];
+  r.chat.push({sender, text, ts:Date.now()});
+  await saveDB(db);
+  openChats[key] = true;
+  if(sender==='patient') patientRefreshResults(); else pharmRefreshAll();
+};
+
+/* ---- ratings helpers ---- */
+function pharmacyAvgRating(ph){
+  if(!ph) return null;
+  // computed lazily from cached db on each render via window._lastDB
+  const db = window._lastDB;
+  if(!db) return null;
+  const scores = [];
+  db.prescriptions.forEach(p=>p.responses.forEach(r=>{ if(r.pharmacyId===ph.id && r.rating) scores.push(r.rating.score); }));
+  if(scores.length===0) return null;
+  return scores.reduce((a,b)=>a+b,0)/scores.length;
+}
+function renderRatingBlock(rxId, phId, rating){
+  if(rating){
+    return `<div class="rateRow">${starsHtml(rating.score,true)} <span>You rated this pharmacy</span></div>`;
+  }
+  return `<div class="rateRow">${starsHtml(0,false,rxId,phId)} <span>Rate this pharmacy</span></div>`;
+}
+function starsHtml(score, readonly, rxId, phId){
+  let out = `<span class="stars ${readonly?'readonly':''}">`;
+  for(let i=1;i<=5;i++){
+    const filled = i<=score ? 'filled':'';
+    if(readonly){ out += `<span class="star ${filled}">★</span>`; }
+    else { out += `<span class="star" onclick="submitRating('${rxId}','${phId}',${i})">★</span>`; }
+  }
+  out += `</span>`;
+  return out;
+}
+window.submitRating = async function(rxId, phId, score){
+  const comment = prompt('Optional: add a quick comment about this pharmacy (or leave blank)') || '';
+  const db = await loadDB();
+  const p = db.prescriptions.find(x=>x.id===rxId);
+  if(!p) return;
+  const r = p.responses.find(x=>x.pharmacyId===phId);
+  if(!r) return;
+  r.rating = {score, comment, ts:Date.now()};
+  await saveDB(db);
+  showToast('Thanks for rating!');
+  patientRefreshResults();
+};
+function patientRefreshHistoryVisible(){ /* no-op, history loads on demand */ }
+document.getElementById('histBtn').onclick=async ()=>{
+  const phone=document.getElementById('histPhone').value.trim();
+  if(!phone){showToast('Enter a phone number');return;}
+  const db = await loadDB();
+  const mine = db.prescriptions.filter(p=>p.patientPhone===phone).sort((a,b)=>b.createdAt-a.createdAt);
+  const el=document.getElementById('histList');
+  if(mine.length===0){ el.innerHTML=`<div class="empty">No requests found for this number yet.</div>`; return; }
+  el.innerHTML = mine.map(r=>{
+    const avail = r.responses.filter(x=>x.available).length;
+    const respDetails = r.responses.map(resp=>{
+      const ph = db.pharmacies.find(p=>p.id===resp.pharmacyId);
+      const chatKey = r.id+'_'+resp.pharmacyId;
+      const deliveryHtml = (r.deliveryMode==='delivery' && resp.available)
+        ? `<div class="delivery-badge">🛵 ${(resp.deliveryStatus||'pending')==='pending'?'Delivery pending':(resp.deliveryStatus==='out_for_delivery'?'Out for delivery':'Delivered')}</div>` : '';
+      const histMapLink = ph ? `https://www.google.com/maps/search/?api=1&query=${ph.lat},${ph.lng}` : '#';
+      const histMapHtml = (resp.available && ph && r.lat!=null && r.lng!=null)
+        ? `<div class="map-embed"><iframe src="${buildDirectionsMapSrc(r.lat, r.lng, ph.lat, ph.lng)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
+           <div class="map-caption"><span>📍 ${ph.address || ph.name}</span><a class="linkbtn" href="${histMapLink}" target="_blank">Open in Google Maps</a></div>`
+        : '';
+      return `<div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px;">
+        <div style="display:flex;justify-content:space-between;">
+          <strong style="font-size:13px;">${ph?ph.name:'Pharmacy'}</strong>
+          <span class="badge ${resp.available?'avail':'unavail'}">${resp.available?'✔ Available':'✘ Not available'}</span>
+        </div>
+        ${deliveryHtml}
+        ${histMapHtml}
+        ${resp.available ? renderRatingBlock(r.id, resp.pharmacyId, resp.rating) : ''}
+        <button class="chatToggle" style="margin-top:8px;" onclick="toggleChat('${r.id}','${resp.pharmacyId}')">💬 Chat</button>
+        <div class="chatPanel ${openChats[chatKey]?'show':''}" id="chat-${chatKey}">
+          ${renderChatMsgs(resp.chat,'patient')}
+          <div class="chatInputRow"><input id="chatIn-${chatKey}" placeholder="Message the pharmacy…"><button onclick="sendChatMsgHistory('${r.id}','${resp.pharmacyId}')">Send</button></div>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="req-card" style="flex-direction:column;">
+      <div class="req-top">
+        <strong>${new Date(r.createdAt).toLocaleString()}</strong>
+        <span class="badge ${r.responses.length===0?'pending':(avail>0?'avail':'unavail')}">${r.responses.length===0?'Waiting…':(avail>0? avail+' pharmacies have it' : 'None available yet')}</span>
+      </div>
+      <div class="pmeta">${r.responses.length} pharmacy response(s)${r.paid?' · Paid 50 ETB via '+r.paymentMethod:''}</div>
+      ${respDetails}
+    </div>`;
+  }).join('');
+};
+window.sendChatMsgHistory = async function(rxId, phId){
+  await window.sendChatMsg(rxId, phId, 'patient');
+  document.getElementById('histBtn').click();
+};
+
+/* ============ PHARMACY LOGIC ============ */
+let pharmSession = null;
+let pharmMode='login';
+document.getElementById('switchToRegister').onclick=switchPharmMode;
+function switchPharmMode(){
+  pharmMode = pharmMode==='login'?'register':'login';
+  document.getElementById('pharmLoginFields').style.display = pharmMode==='login'?'block':'none';
+  document.getElementById('pharmRegisterFields').style.display = pharmMode==='register'?'block':'none';
+  document.getElementById('pharmAuthTitle').textContent = pharmMode==='login'?'Log in to your pharmacy':'Register your pharmacy';
+  document.getElementById('switchPrompt').innerHTML = pharmMode==='login'
+    ? 'New pharmacy? <a id="switchToRegister2">Register here</a>'
+    : 'Already registered? <a id="switchToRegister2">Log in</a>';
+  document.getElementById('switchToRegister2').onclick = switchPharmMode;
+}
+document.getElementById('regGpsBtn').onclick=()=>{
+  if(!navigator.geolocation){showToast('GPS not available');return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    document.getElementById('regLat').value=pos.coords.latitude.toFixed(5);
+    document.getElementById('regLng').value=pos.coords.longitude.toFixed(5);
+    showToast('Location captured');
+  }, err=>showToast('Could not get location: '+err.message));
+};
+document.getElementById('registerBtn').onclick=async ()=>{
+  const name=document.getElementById('regName').value.trim();
+  const pharmacist=document.getElementById('regPharmacist').value.trim();
+  const phone=document.getElementById('regPhone').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pw=document.getElementById('regPw').value;
+  const address=document.getElementById('regAddress').value.trim();
+  const lat=parseFloat(document.getElementById('regLat').value);
+  const lng=parseFloat(document.getElementById('regLng').value);
+  const license=document.getElementById('regLicense').value.trim();
+  if(!name||!phone||!pw||isNaN(lat)||isNaN(lng)){showToast('Please fill in name, phone, password and location');return;}
+  const db = await loadDB();
+  const rec = {id:uid('ph'), name, pharmacist, phone, email, password:pw, address, lat, lng, license, verified:false, createdAt:Date.now()};
+  db.pharmacies.push(rec);
+  await saveDB(db);
+  pharmSession = rec.id;
+  showToast('Registered! Awaiting admin verification.');
+  pharmEnterApp();
+};
+document.getElementById('loginBtn').onclick=async ()=>{
+  const id=document.getElementById('loginId').value.trim();
+  const pw=document.getElementById('loginPw').value;
+  const db = await loadDB();
+  const ph = db.pharmacies.find(p=>(p.phone===id||p.email===id) && p.password===pw);
+  if(!ph){ document.getElementById('loginErr').style.display='block'; return; }
+  document.getElementById('loginErr').style.display='none';
+  pharmSession = ph.id;
+  pharmEnterApp();
+};
+document.getElementById('pharmLogoutBtn').onclick=()=>{
+  pharmSession=null; stopPollers();
+  document.getElementById('pharm-appView').style.display='none';
+  document.getElementById('pharm-authView').style.display='block';
+};
+function pharmEnterApp(){
+  document.getElementById('pharm-authView').style.display='none';
+  document.getElementById('pharm-appView').style.display='block';
+  pharmRefreshAll();
+  const t = setInterval(pharmRefreshAll, 4000);
+  activePollers.push(t);
+}
+document.querySelectorAll('[data-phtab]').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('[data-phtab]').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    ['incoming','history','profile'].forEach(name=>{ document.getElementById('phpanel-'+name).style.display = t.dataset.phtab===name?'block':'none'; });
+  };
+});
+async function pharmRefreshAll(){
+  const db = await loadDB();
+  const ph = db.pharmacies.find(p=>p.id===pharmSession);
+  if(!ph) return;
+  document.getElementById('pharmNameTag').textContent = ph.name;
+  document.getElementById('unverifiedBanner').style.display = ph.verified ? 'none':'block';
+  document.getElementById('pfName').value=ph.name;
+  document.getElementById('pfPhone').value=ph.phone;
+  document.getElementById('pfAddress').value=ph.address||'';
+  document.getElementById('pfStatus').value = ph.verified? 'Verified ✔':'Pending review';
+  const RADIUS_KM=5;
+  const nearby = db.prescriptions.filter(p=>haversine(p.lat,p.lng,ph.lat,ph.lng)<=RADIUS_KM);
+  const responded = new Set();
+  nearby.forEach(p=>{ if(p.responses.some(r=>r.pharmacyId===ph.id)) responded.add(p.id); });
+  const incoming = nearby.filter(p=>!responded.has(p.id)).sort((a,b)=>b.createdAt-a.createdAt);
+  const past = nearby.filter(p=>responded.has(p.id)).sort((a,b)=>b.createdAt-a.createdAt);
+  document.getElementById('statNew').textContent = incoming.length;
+  document.getElementById('statActive').textContent = nearby.length;
+  document.getElementById('statResponded').textContent = past.length;
+  const today = new Date().toDateString();
+  document.getElementById('statToday').textContent = nearby.filter(p=>new Date(p.createdAt).toDateString()===today).length;
+  const incomingList = document.getElementById('incomingList');
+  if(!ph.verified){
+    incomingList.innerHTML = `<div class="empty">Requests will appear here once your pharmacy is verified by the admin team.</div>`;
+  } else if(incoming.length===0){
+    incomingList.innerHTML = `<div class="empty">No new prescription requests nearby right now.</div>`;
+  } else {
+    incomingList.innerHTML = incoming.map(p=>{
+      const dist = haversine(p.lat,p.lng,ph.lat,ph.lng).toFixed(1);
+      const mins = Math.max(1, Math.round((Date.now()-p.createdAt)/60000));
+      return `<div class="req-card">
+        <img src="${p.photo}">
+        <div style="flex:1;">
+          <div class="req-top">
+            <div><div style="font-weight:700;">New prescription request</div><div style="color:var(--muted);font-size:13px;">${mins} min ago</div></div>
+            <span class="dist-badge">${dist} km away</span>
+          </div>
+          <div class="req-actions">
+            <button class="btn-small btn-success" onclick="openRespond('${p.id}',true)">Available</button>
+            <button class="btn-small btn-danger" onclick="openRespond('${p.id}',false)">Not available</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  const historyList = document.getElementById('historyList');
+  historyList.innerHTML = past.length===0 ? `<div class="empty">No responses sent yet.</div>` : past.map(p=>{
+    const r = p.responses.find(x=>x.pharmacyId===ph.id);
+    const chatKey = p.id+'_'+ph.id;
+    let deliveryHtml = '';
+    if(p.deliveryMode==='delivery' && r.available){
+      const status = r.deliveryStatus||'pending';
+      let btns = '';
+      if(status==='pending') btns = `<button class="btn-small" style="background:var(--accent);color:#fff;" onclick="advanceDelivery('${p.id}','${ph.id}','out_for_delivery')">Mark out for delivery</button>`;
+      else if(status==='out_for_delivery') btns = `<button class="btn-small btn-success" onclick="advanceDelivery('${p.id}','${ph.id}','delivered')">Mark delivered</button>`;
+      deliveryHtml = `<div class="delivery-badge">🛵 Fee ${r.deliveryFee||0} ETB · ${status==='pending'?'Pending pickup by rider':status==='out_for_delivery'?'Out for delivery':'Delivered ✔'}</div><div class="delivBtns">${btns}</div>`;
+    }
+    const ratingHtml = r.rating ? `<div class="rateRow">${starsHtml(r.rating.score,true)} <span>${r.rating.comment?'"'+escapeHtml(r.rating.comment)+'"':'Customer rating'}</span></div>` : '';
+    const detailsHtml = r.available ? `
+      <div class="grid2" style="margin-top:10px;">
+        <div class="field" style="margin-bottom:0;"><label>Medicine</label><input value="${escapeHtml(r.medicine||'')}" placeholder="e.g. Paracetamol" onchange="updateResponseDetail('${p.id}','${ph.id}','medicine',this.value)"></div>
+        <div class="field" style="margin-bottom:0;"><label>Quantity</label><input value="${escapeHtml(r.quantity||'')}" placeholder="e.g. 1 box" onchange="updateResponseDetail('${p.id}','${ph.id}','quantity',this.value)"></div>
+      </div>
+      ${p.deliveryMode==='delivery' ? `<div class="field" style="margin-top:10px;margin-bottom:0;"><label>🛵 Delivery to ${p.deliveryAddress||''} — fee (ETB)</label><input value="${r.deliveryFee||''}" placeholder="e.g. 40" onchange="updateResponseDetail('${p.id}','${ph.id}','deliveryFee',this.value)"></div>` : ''}
+    ` : '';
+    return `<div class="req-card">
+      <img src="${p.photo}">
+      <div style="flex:1;">
+        <div class="req-top"><div style="font-weight:700;">${new Date(p.createdAt).toLocaleString()}</div><span class="badge ${r.available?'avail':'unavail'}">${r.available?'✔ Marked available':'✘ Marked unavailable'}</span></div>
+        ${r.medicine?`<div style="color:var(--muted);font-size:13px;margin-top:4px;">${r.medicine} · ${r.quantity||''}</div>`:''}
+        ${deliveryHtml}
+        ${ratingHtml}
+        ${detailsHtml}
+        <button class="chatToggle" style="margin-top:8px;" onclick="toggleChat('${p.id}','${ph.id}')">💬 Chat with patient</button>
+        <div class="chatPanel ${openChats[chatKey]?'show':''}" id="chat-${chatKey}">
+          ${renderChatMsgs(r.chat,'pharmacy')}
+          <div class="chatInputRow"><input id="chatIn-${chatKey}" placeholder="Message the patient…"><button onclick="sendChatMsg('${p.id}','${ph.id}','pharmacy')">Send</button></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+window.openRespond = async function(id, available){
+  const db = await loadDB();
+  const p = db.prescriptions.find(x=>x.id===id);
+  if(!p) return;
+  if(p.responses.some(r=>r.pharmacyId===pharmSession)) return; // already responded, avoid duplicates
+  const resp = {pharmacyId:pharmSession, available, medicine:'', quantity:'', createdAt:Date.now(), chat:[]};
+  if(p.deliveryMode==='delivery' && available){ resp.deliveryFee = 0; resp.deliveryStatus = 'pending'; }
+  p.responses.push(resp);
+  await saveDB(db);
+  showToast(available ? 'Sent to patient automatically — add medicine details below' : 'Marked as not available');
+  pharmRefreshAll();
+};
+window.updateResponseDetail = async function(rxId, phId, field, value){
+  const db = await loadDB();
+  const p = db.prescriptions.find(x=>x.id===rxId);
+  if(!p) return;
+  const r = p.responses.find(x=>x.pharmacyId===phId);
+  if(!r) return;
+  r[field] = field==='deliveryFee' ? (parseFloat(value)||0) : value.trim();
+  await saveDB(db);
+  showToast('Updated');
+  pharmRefreshAll();
+};
+window.advanceDelivery = async function(rxId, phId, newStatus){
+  const db = await loadDB();
+  const p = db.prescriptions.find(x=>x.id===rxId);
+  if(!p) return;
+  const r = p.responses.find(x=>x.pharmacyId===phId);
+  if(!r) return;
+  r.deliveryStatus = newStatus;
+  await saveDB(db);
+  showToast(newStatus==='out_for_delivery' ? 'Marked out for delivery' : 'Marked delivered');
+  pharmRefreshAll();
+};
+document.getElementById('pfSaveBtn').onclick=async ()=>{
+  const db = await loadDB();
+  const ph = db.pharmacies.find(p=>p.id===pharmSession);
+  ph.name = document.getElementById('pfName').value.trim();
+  ph.phone = document.getElementById('pfPhone').value.trim();
+  ph.address = document.getElementById('pfAddress').value.trim();
+  await saveDB(db);
+  showToast('Profile updated');
+  pharmRefreshAll();
+};
+
+/* ============ ADMIN LOGIC ============ */
+let adminAuthed = false;
+const ADMIN_PW='os@224';
+document.getElementById('adminLoginBtn').onclick=()=>{
+  if(document.getElementById('adminPw').value===ADMIN_PW){
+    adminAuthed = true;
+    adminEnterApp();
+  } else { showToast('Incorrect password'); }
+};
+document.getElementById('adminLogoutBtn').onclick=()=>{
+  adminAuthed=false; stopPollers();
+  document.getElementById('admin-appView').style.display='none';
+  document.getElementById('admin-authView').style.display='block';
+};
+function adminEnterApp(){
+  document.getElementById('admin-authView').style.display='none';
+  document.getElementById('admin-appView').style.display='block';
+  adminRefreshAll();
+  const t = setInterval(adminRefreshAll, 4000);
+  activePollers.push(t);
+}
+document.querySelectorAll('[data-adtab]').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('[data-adtab]').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('adpanel-pharmacies').style.display = t.dataset.adtab==='pharmacies'?'block':'none';
+    document.getElementById('adpanel-requests').style.display = t.dataset.adtab==='requests'?'block':'none';
+  };
+});
+async function adminRefreshAll(){
+  const db = await loadDB();
+  document.getElementById('statPharm').textContent = db.pharmacies.length;
+  document.getElementById('statPending').textContent = db.pharmacies.filter(p=>!p.verified && !p.banned).length;
+  document.getElementById('statReq').textContent = db.prescriptions.length;
+  const fulfilled = db.prescriptions.filter(p=>p.responses.some(r=>r.available)).length;
+  document.getElementById('statRate').textContent = db.prescriptions.length ? Math.round(fulfilled/db.prescriptions.length*100)+'%' : '0%';
+
+  const revenue = db.prescriptions.filter(p=>p.paid).reduce((sum,p)=>sum+(p.paymentAmount||0),0);
+  document.getElementById('statRevenue').textContent = revenue+' ETB';
+  const allScores = [];
+  let chatCount = 0, deliveryCount = 0;
+  db.prescriptions.forEach(p=>{
+    if(p.deliveryMode==='delivery') deliveryCount++;
+    p.responses.forEach(r=>{
+      if(r.rating) allScores.push(r.rating.score);
+      if(r.chat && r.chat.length>0) chatCount++;
+    });
+  });
+  document.getElementById('statAvgRating').textContent = allScores.length ? '★ '+(allScores.reduce((a,b)=>a+b,0)/allScores.length).toFixed(1) : '—';
+  document.getElementById('statDelivery').textContent = deliveryCount;
+  document.getElementById('statChats').textContent = chatCount;
+
+  document.getElementById('pharmTable').innerHTML = db.pharmacies.length===0
+    ? `<tr><td colspan="6"><div class="empty">No pharmacies registered yet.</div></td></tr>`
+    : db.pharmacies.map(p=>{
+      const status = p.banned ? `<span class="badge banned">Banned</span>` : p.verified ? `<span class="badge verified">Verified</span>` : `<span class="badge pending">Pending</span>`;
+      let actions = '';
+      if(p.banned){ actions = `<button class="btn-small btn-unban" onclick="adminUnban('${p.id}')">Unban</button>`; }
+      else {
+        if(!p.verified) actions += `<button class="btn-small btn-success" onclick="adminApprove('${p.id}')">Approve</button>`;
+        actions += `<button class="btn-small btn-danger" onclick="adminBan('${p.id}')">Ban</button>`;
+      }
+      const avg = pharmacyAvgRating(p);
+      const ratingCell = avg ? '★ '+avg.toFixed(1) : '—';
+      return `<tr><td><strong>${p.name}</strong><br><span style="color:var(--muted);">${p.address||''}</span></td><td>${p.phone}</td><td>${ratingCell}</td><td>${p.license||'—'}</td><td>${status}</td><td>${actions}</td></tr>`;
+    }).join('');
+  const sortedReq = [...db.prescriptions].sort((a,b)=>b.createdAt-a.createdAt);
+  document.getElementById('reqTable').innerHTML = sortedReq.length===0
+    ? `<tr><td colspan="5"><div class="empty">No prescription requests yet.</div></td></tr>`
+    : sortedReq.map(r=>{
+      const avail = r.responses.filter(x=>x.available).length;
+      const status = r.responses.length===0 ? `<span class="badge pending">Waiting</span>` : avail>0 ? `<span class="badge verified">Fulfilled</span>` : `<span class="badge banned">None available</span>`;
+      return `<tr><td><img src="${r.photo}"></td><td>${r.patientName}<br><span style="color:var(--muted);">${r.patientPhone}</span></td><td>${new Date(r.createdAt).toLocaleString()}</td><td>${r.responses.length}</td><td>${status}</td></tr>`;
+    }).join('');
+}
+window.adminApprove = async function(id){ const db=await loadDB(); const p=db.pharmacies.find(x=>x.id===id); p.verified=true; await saveDB(db); showToast('Pharmacy approved'); adminRefreshAll(); };
+window.adminBan = async function(id){ const db=await loadDB(); const p=db.pharmacies.find(x=>x.id===id); p.banned=true; p.verified=false; await saveDB(db); showToast('Pharmacy banned'); adminRefreshAll(); };
+window.adminUnban = async function(id){ const db=await loadDB(); const p=db.pharmacies.find(x=>x.id===id); p.banned=false; await saveDB(db); showToast('Pharmacy unbanned'); adminRefreshAll(); };
+
+goView('landing');
+</script>
+</body>
+</html>

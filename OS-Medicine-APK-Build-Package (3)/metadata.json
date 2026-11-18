@@ -1,0 +1,6 @@
+{
+  "name": "OS Medicine",
+  "description": "Ethiopian medicine discovery and pharmacy connection platform connecting patients with nearby pharmacies.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
